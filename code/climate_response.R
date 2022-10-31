@@ -140,13 +140,24 @@ ggplot()+
 #extract climate data of interest ie regional SPEI-4 July
 clim.data.3.7<-dplyr::filter(clim.data.3,month == 7)
 
-ggplot()+
-  # geom_line(data=d18O.series.melt,
-  #           aes(x=year,
-  #               y=value.sc,
-  #               colour=variable))+
-  geom_line(data=redated.chron,aes(x=1901:2015,y=adj.crn),colour="black")+
-  geom_line(data=clim.data.3.7,aes(x=year,y=spei.reg.1*-1),colour="red")+
+d18O.series.melt.gg<-ggplot()+
+  geom_line(data=d18O.series.melt,
+            aes(x=year,
+                y=value.sc,
+                colour=variable))+
+  #geom_line(data=redated.chron,aes(x=1901:2015,y=adj.crn),colour="black")+
+  #geom_line(data=clim.data.3.7,aes(x=year,y=spei.reg.1*-1),colour="red")+
   #geom_point(data=clim.data.3.7,aes(x=year,y=spei.reg.1*-1),colour="black")+
   coord_cartesian(xlim=c(1901,2016))
+
+pdf("/Users/danielbalanzategui/Documents/R/DAI_groundcheck_3rd_and_4th_century_project/figures/cross_dated_d18O.series.pdf",height=6,width=7.3)
+d18O.series.melt.gg
+dev.off()
+
+nc_open("/Users/danielbalanzategui/Documents/R/DAI_groundcheck_3rd_and_4th_century_project/analysis/field_correlation_results/climate_explorer_nc_out/d18O_july_spei_4_field_correlation_stability_test_30_year_windows/g20221022_1303_2169483.nc")
+
+cdo mergetime *.nc outfile
+
+cdo selvar, correlation outfile.nc outfile.corr.nc
+
 
